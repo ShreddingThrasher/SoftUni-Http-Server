@@ -1,6 +1,7 @@
 ﻿using SoftUniHttpServer.Server.HTTP;
 using SoftUniHttpServer.Server.Routing;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -90,6 +91,13 @@ namespace SoftUniHttpServer.Server
         private async Task WriteResponse(NetworkStream networkStream, Response response)
         {
             var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
+
+            if(response.FileContent != null)
+            {
+                responseBytes = responseBytes
+                    .Concat(response.FileContent)
+                    .ToArray();
+            }
 
             await networkStream.WriteAsync(responseBytes);
         }

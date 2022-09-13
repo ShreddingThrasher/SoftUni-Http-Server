@@ -7,29 +7,30 @@ using System.Threading.Tasks;
 
 namespace SoftUniHttpServer.Server.Responses
 {
-    public class TextFileResponse : Response
+    public class FileResponse : Response
     {
         public string FileName { get; set; }
 
-        public TextFileResponse(string fileName)
+        public FileResponse(string fileName)
             : base(StatusCode.OK)
         {
             this.FileName = fileName;
 
-            this.Headers.Add(Header.ContentDisposition, ContentType.PlainText);
+            this.Headers.Add(Header.ContentDisposition, ContentType.FileContent);
         }
 
         public override string ToString()
         {
-            if (File.Exists(this.FileName))
+            if (File.Exists($"../../../{this.FileName}"))
             {
-                this.Body = File.ReadAllTextAsync(this.FileName).Result;
+                this.Body = string.Empty;
+                var fileContent = File.ReadAllBytes($"../../../{this.FileName}");
 
-                var fileBytesCount = new FileInfo(this.FileName).Length;
+                var fileBytesCount = new FileInfo($"../../../{this.FileName}").Length;
                 this.Headers.Add(Header.ContentLength, fileBytesCount.ToString());
 
                 this.Headers.Add(Header.ContentDisposition,
-                    $@"attaqchment; filename={this.FileName}");
+                    $@"attachment; filename={this.FileName}");
 
             }
 

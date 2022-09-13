@@ -25,7 +25,7 @@ namespace SoftUniHttpServer.Demo
         </form>";
 
 
-        private const string FileName = "content.txt";
+        private const string FileName = "test.docx";
 
         private const string LoginForm = @"<form action='/Login' method='POST'>
             Username: <input type='text' name='Username'/>
@@ -38,8 +38,8 @@ namespace SoftUniHttpServer.Demo
 
         public static async Task Main(string[] args)
         {
-            await DownloadSitesAsTextFile(StartUp.FileName,
-                new string[] { "https://judge.softuni.org/", "https://softuni.org/" });
+            //await DownloadSitesAsTextFile(StartUp.FileName,
+            //    new string[] { "https://judge.softuni.org/", "https://softuni.org/" });
 
             var server = new HttpServer(routes =>
                 routes
@@ -48,7 +48,7 @@ namespace SoftUniHttpServer.Demo
                     .MapGet("/Redirect", new RedirectResponse("https:softuni.org"))
                     .MapPost("/HTML", new TextResponse("", StartUp.AddFormDataAction))
                     .MapGet("/Content", new HtmlResponse(StartUp.DownloadForm))
-                    .MapPost("/Content", new TextFileResponse(StartUp.FileName))
+                    .MapPost("/Content", new FileResponse(StartUp.FileName))
                     .MapGet("/Cookies", new HtmlResponse("", StartUp.AddCookiesAction))
                     .MapGet("/Session", new TextResponse("", StartUp.DisplaySessionInfoAction))
                     .MapGet("/Login", new HtmlResponse(StartUp.LoginForm))

@@ -17,7 +17,7 @@ namespace SoftUniHttpServer.Server.HTTP
         public HeaderCollection Headers { get; } = new HeaderCollection();
         public CookieCollection Cookies { get; } = new CookieCollection();
         public string Body { get; set; }
-
+        public byte[] FileContent { get; set; }
         public Action<Request, Response> PreRenderAction { get; protected set; }
 
         public override string ToString()
