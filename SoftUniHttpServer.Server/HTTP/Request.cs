@@ -12,8 +12,11 @@ namespace SoftUniHttpServer.Server.HTTP
         public HeaderCollection Headers { get; private set; }
         public CookieCollection Cookies { get; private set; }
         public string Body { get; private set; }
+        public Session Session { get; set; }
         public IReadOnlyDictionary<string, string> Form { get; private set; }
 
+
+        private static Dictionary<string, Session> Sessions = new Dictionary<string, Session>();
 
         public static Request Parse(string request)
         {
@@ -29,6 +32,8 @@ namespace SoftUniHttpServer.Server.HTTP
 
             CookieCollection cookies = ParseCookies(headers);
 
+            Session session = GetSession(cookies);
+
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
             var body = string.Join("\r\n", bodyLines);
@@ -42,6 +47,7 @@ namespace SoftUniHttpServer.Server.HTTP
                 Headers = headers,
                 Cookies = cookies,
                 Body = body,
+                Session = session,
                 Form = form
             };
         }
@@ -56,6 +62,19 @@ namespace SoftUniHttpServer.Server.HTTP
             {
                 throw new InvalidOperationException($"Method '{method}' is not supported");
             }
+        }
+
+        private static Session GetSession(CookieCollection cookies)
+        {
+            var sessionId = cookies.Contains(Session.SessionCookieName)
+                ? cookies[Session.SessionCookieName] : Guid.NewGuid().ToString();
+
+            if (!Sessions.ContainsKey(sessionId))
+            {
+                Sessions[sessionId] = new Session(sessionId);
+            }
+
+            return Sessions[sessionId];
         }
 
         private static CookieCollection ParseCookies(HeaderCollection headers)
