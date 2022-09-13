@@ -15,10 +15,10 @@ namespace SoftUniHttpServer.Server.Routing
         {
             this.routes = new Dictionary<Method, Dictionary<string, Response>>()
             {
-                [Method.Get] = new Dictionary<string, Response>(),
-                [Method.Post] = new Dictionary<string, Response>(),
-                [Method.Put] = new Dictionary<string, Response>(),
-                [Method.Delete] = new Dictionary<string, Response>()
+                [Method.Get] = new Dictionary<string, Response>(StringComparer.InvariantCulture),
+                [Method.Post] = new Dictionary<string, Response>(StringComparer.InvariantCulture),
+                [Method.Put] = new Dictionary<string, Response>(StringComparer.InvariantCulture),
+                [Method.Delete] = new Dictionary<string, Response>(StringComparer.InvariantCulture)
             };
         }
 
